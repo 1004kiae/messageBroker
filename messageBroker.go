@@ -1,22 +1,14 @@
 package messageBroker
 
-import "fmt"
+import (
+	"fmt"
+)
 
 // noinspection ALL
 const (
 	BROKER_TYPE_EMQX = iota
 	//BROKER_TYPE_REDIS
 )
-
-type BrokerInterface interface {
-	initialize(*BrokerConfig)
-	createClient() (ClientInterface, error)
-}
-
-type ClientInterface interface {
-	Pub(string, string) error
-	Sub(string, func()) error
-}
 
 type BrokerConfig struct {
 	brokerType int
@@ -29,6 +21,16 @@ type BrokerConfig struct {
 
 	UserName string
 	Password string
+}
+
+type BrokerInterface interface {
+	initialize(*BrokerConfig)
+	createClient() (ClientInterface, error)
+}
+
+type ClientInterface interface {
+	Pub(string, string) error
+	Sub(string, func([]byte)) error
 }
 
 type MsgBroker struct {

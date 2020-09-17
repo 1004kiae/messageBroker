@@ -66,8 +66,10 @@ func (ec *EmqxClient) Pub(topic string, message string) error {
 	return nil
 }
 
-func (ec *EmqxClient) Sub(topic string, callbackFunc func()) error {
-	if token := ec.emqxClient.Subscribe(topic, byte(ec.qos), callbackFunc); token.Error() != nil {
+func (ec *EmqxClient) Sub(topic string, callbackFunc func([]byte)) error {
+	if token := ec.emqxClient.Subscribe(topic, byte(ec.qos), func(client mqtt.Client, message mqtt.Message) {
+		callbackFunc(message.Payload())
+	}); token.Error() != nil {
 		return token.Error()
 	}
 
