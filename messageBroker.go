@@ -11,7 +11,7 @@ const (
 )
 
 type BrokerConfig struct {
-	brokerType int
+	BrokerType int
 
 	Qos      int
 	Retained bool
@@ -38,7 +38,7 @@ type MsgBroker struct {
 }
 
 func (b *MsgBroker) Initialize(config *BrokerConfig) error {
-	switch config.brokerType {
+	switch config.BrokerType {
 	case BROKER_TYPE_EMQX:
 		b.broker = new(Emqx)
 		b.broker.initialize(config)
@@ -50,7 +50,7 @@ func (b *MsgBroker) Initialize(config *BrokerConfig) error {
 	//	break
 
 	default:
-		return fmt.Errorf("broker unknown type: %d", config.brokerType)
+		return fmt.Errorf("broker unknown type: %d", config.BrokerType)
 	}
 
 	return nil
