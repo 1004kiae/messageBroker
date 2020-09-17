@@ -15,7 +15,6 @@ type Emqx struct {
 
 	qos      int
 	retained bool
-	//client   *mqtt.Client
 }
 
 func (b *Emqx) SettingOptions(config *messageBroker.BrokerConfig) {
