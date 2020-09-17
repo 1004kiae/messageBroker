@@ -25,14 +25,15 @@ type BrokerConfig struct {
 }
 
 type BrokerClient struct {
-	client broker.BrokerClientInterface
+	broker broker.BrokerInterface
+	client broker.ClientInterface
 }
 
 func (b *BrokerClient) Initialize(config *BrokerConfig) error {
 	switch config.brokerType {
 	case BROKER_TYPE_EMQX:
-		b.client = new(broker.Emqx)
-		b.client.SettingOptions(config)
+		b.broker = new(broker.Emqx)
+		b.broker.SettingOptions(config)
 		break
 	default:
 		return fmt.Errorf("broker unknown type: %d", config.brokerType)
@@ -41,6 +42,14 @@ func (b *BrokerClient) Initialize(config *BrokerConfig) error {
 	return nil
 }
 
-func (b *BrokerClient) NewClient() (*broker.BrokerClientInterface, error) {
-	return b.client.CreateClient()
+func (b *BrokerClient) NewClient() (*broker.ClientInterface, error) {
+	return b.broker.CreateClient()
+}
+
+func (b *BrokerClient) Pub(topic string, message string) error {
+	return b.client.Pub(topic, message)
+}
+
+func (b *BrokerClient) Sub(topic string, callbackFunc func()) error {
+	return b.client.Sub(topic, callbackFunc)
 }

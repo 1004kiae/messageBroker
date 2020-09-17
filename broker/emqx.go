@@ -15,7 +15,7 @@ type Emqx struct {
 
 	qos      int
 	retained bool
-	client   *mqtt.Client
+	//client   *mqtt.Client
 }
 
 func (b *Emqx) SettingOptions(config *messageBroker.BrokerConfig) {
@@ -39,21 +39,22 @@ func (b *Emqx) SettingOptions(config *messageBroker.BrokerConfig) {
 	b.retained = config.Retained
 }
 
-func (b *Emqx) CreateClient() (*BrokerClientInterface, error) {
+func (b *Emqx) CreateClient() (*ClientInterface, error) {
 	client := mqtt.NewClient(b.options)
 
 	if token := client.Connect(); token.Wait() && token.Error() != nil {
 		return nil, token.Error()
 	}
-	b.client = &client
+	//c := &client
 
-	// todo 여기선 어떻게 리턴해야하지.. 음..
-	//return b.client, nil
+	// todo 여기선 어떻게 리턴해야하지..
+	//return client, nil
 	return nil, nil
 }
 
-func (b *Emqx) Pub(topic string, message string) error {
-	if token := (*b.client).Publish(topic, byte(b.qos), b.retained, message); token.Error() != nil {
+func (b *Emqx) Pub(client *ClientInterface, topic string, message string) error {
+	c := *client
+	if token := c.(mqtt.Client).Publish(topic, byte(b.qos), b.retained, message); token.Error() != nil {
 		return token.Error()
 	}
 
@@ -61,6 +62,7 @@ func (b *Emqx) Pub(topic string, message string) error {
 }
 
 func (b *Emqx) Sub(topic string, callbackFunc func()) error {
+	// todo MessageHandler -> func() 로 어떻게 변환해야 하징..
 	//	if token := (*b.client).Subscribe(topic, byte(b.qos), callback); token.Wait() && token.Error() != nil {
 	//		return token.Error()
 	//	}

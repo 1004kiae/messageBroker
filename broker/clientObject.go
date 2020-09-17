@@ -3,9 +3,13 @@ package broker
 import "test/messageBroker"
 
 // noinspection ALL
-type BrokerClientInterface interface {
+type BrokerInterface interface {
 	SettingOptions(config *messageBroker.BrokerConfig)
-	CreateClient() (*BrokerClientInterface, error)
+	CreateClient() (*ClientInterface, error)
+}
+
+// noinspection ALL
+type ClientInterface interface {
 	Pub(string, string) error
 	Sub(string, func()) error
 }
