@@ -1,9 +1,6 @@
 package messageBroker
 
-import (
-	"fmt"
-	"test/messageBroker/broker"
-)
+import "fmt"
 
 // noinspection ALL
 const (
@@ -12,8 +9,8 @@ const (
 )
 
 type BrokerInterface interface {
-	Initialize(*BrokerConfig)
-	CreateClient() (*ClientInterface, error)
+	initialize(*BrokerConfig)
+	createClient() (*ClientInterface, error)
 }
 
 type ClientInterface interface {
@@ -34,21 +31,19 @@ type BrokerConfig struct {
 	Password string
 }
 
-type MessageBroker struct {
-	broker *BrokerInterface
+type MsgBroker struct {
+	broker BrokerInterface
 }
 
-func (b *MessageBroker) Initialize(config *BrokerConfig) error {
+func (b *MsgBroker) Initialize(config *BrokerConfig) error {
 	switch config.brokerType {
 	case BROKER_TYPE_EMQX:
-		br := new(broker.Emqx)
-		br.Initialize(config)
-
-		b.broker = new(broker.Emqx)
+		b.broker = new(Emqx)
+		b.broker.initialize(config)
 		break
 
 	//case BROKER_TYPE_REDIS:
-	//	b.broker = new(broker.Redis)
+	//	b.broker = new(Redis)
 	//	b.broker.initialize(config)
 	//	break
 
@@ -59,6 +54,6 @@ func (b *MessageBroker) Initialize(config *BrokerConfig) error {
 	return nil
 }
 
-func (b *MessageBroker) NewClient() (*ClientInterface, error) {
-	//return b.broker.createClient()
+func (b *MsgBroker) NewClient() (*ClientInterface, error) {
+	return b.broker.createClient()
 }
