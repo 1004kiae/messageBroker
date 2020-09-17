@@ -43,7 +43,7 @@ func (e *Emqx) initialize(config *BrokerConfig) {
 	e.retained = config.Retained
 }
 
-func (e *Emqx) createClient() (*ClientInterface, error) {
+func (e *Emqx) createClient() (ClientInterface, error) {
 	emqxClient := mqtt.NewClient(e.options)
 
 	if token := emqxClient.Connect(); token.Wait() && token.Error() != nil {

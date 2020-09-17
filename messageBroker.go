@@ -10,7 +10,7 @@ const (
 
 type BrokerInterface interface {
 	initialize(*BrokerConfig)
-	createClient() (*ClientInterface, error)
+	createClient() (ClientInterface, error)
 }
 
 type ClientInterface interface {
@@ -54,6 +54,6 @@ func (b *MsgBroker) Initialize(config *BrokerConfig) error {
 	return nil
 }
 
-func (b *MsgBroker) NewClient() (*ClientInterface, error) {
+func (b *MsgBroker) NewClient() (ClientInterface, error) {
 	return b.broker.createClient()
 }
