@@ -7,3 +7,5 @@ require (
 	github.com/go-redis/redis v6.15.9+incompatible
 	golang.org/x/net v0.0.0-20200904194848-62affa334b73 // indirect
 )
+
+replace test/messageBroker => ./messageBroker
