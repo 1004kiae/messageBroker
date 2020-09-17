@@ -15,7 +15,7 @@ type Emqx struct {
 
 	qos      int
 	retained bool
-	client   mqtt.Client
+	client   *mqtt.Client
 }
 
 func (b *Emqx) SettingOptions(config *messageBroker.BrokerConfig) {
@@ -40,30 +40,20 @@ func (b *Emqx) SettingOptions(config *messageBroker.BrokerConfig) {
 }
 
 func (b *Emqx) CreateClient() (*BrokerClientInterface, error) {
-	//opts := mqtt.NewClientOptions()
-	//
-	//// The full URL of the MQTT server to connect to
-	//opts.AddBroker(fmt.Sprintf("tcp://%s:%d", mqttServer.Host, mqttServer.Port))
-	//
-	//// A username&password to authenticate to the MQTT server
-	//opts.SetUsername(mqttServer.UserName)
-	//opts.SetPassword(mqttServer.Password)
-	//
-	//// A clientID for the connection
-	//hostname, _ := os.Hostname()
-	//opts.SetClientID(fmt.Sprintf("%s_%s", hostname, strconv.Itoa(time.Now().Second())))
-	//
-	//client := mqtt.NewClient(opts)
-	//
-	//if token := client.Connect(); token.Wait() && token.Error() != nil {
-	//	return token.Error()
-	//}
+	client := mqtt.NewClient(b.options)
 
+	if token := client.Connect(); token.Wait() && token.Error() != nil {
+		return nil, token.Error()
+	}
+	b.client = &client
+
+	// todo 여기선 어떻게 리턴해야하지.. 음..
+	//return b.client, nil
 	return nil, nil
 }
 
 func (b *Emqx) Pub(topic string, message string) error {
-	if token := b.client.Publish(topic, byte(b.qos), b.retained, message); token.Error() != nil {
+	if token := (*b.client).Publish(topic, byte(b.qos), b.retained, message); token.Error() != nil {
 		return token.Error()
 	}
 
@@ -71,7 +61,7 @@ func (b *Emqx) Pub(topic string, message string) error {
 }
 
 func (b *Emqx) Sub(topic string, callbackFunc func()) error {
-	//	if token := b.client.Subscribe(topic, byte(b.qos), callback); token.Wait() && token.Error() != nil {
+	//	if token := (*b.client).Subscribe(topic, byte(b.qos), callback); token.Wait() && token.Error() != nil {
 	//		return token.Error()
 	//	}
 
