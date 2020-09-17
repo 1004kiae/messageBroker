@@ -26,7 +26,6 @@ type BrokerConfig struct {
 
 type BrokerClient struct {
 	broker broker.BrokerInterface
-	client *broker.ClientInterface
 }
 
 func (b *BrokerClient) Initialize(config *BrokerConfig) error {
@@ -42,20 +41,20 @@ func (b *BrokerClient) Initialize(config *BrokerConfig) error {
 	return nil
 }
 
-func (b *BrokerClient) NewClient() error {
+func (b *BrokerClient) NewClient() (*broker.ClientInterface, error) {
 	client, err := b.broker.CreateClient()
 	if err != nil {
-		return err
+		return nil, err
 	}
-	b.client = client
+	//b.client = client
 
-	return nil
+	return client, nil
 }
 
-func (b *BrokerClient) Pub(topic string, message string) error {
-	return (*b.client).Pub(topic, message)
-}
-
-func (b *BrokerClient) Sub(topic string, callbackFunc func()) error {
-	return (*b.client).Sub(topic, callbackFunc)
-}
+//func (b *BrokerClient) Pub(topic string, message string) error {
+//	return (*b.client).Pub(topic, message)
+//}
+//
+//func (b *BrokerClient) Sub(topic string, callbackFunc func()) error {
+//	return (*b.client).Sub(topic, callbackFunc)
+//}

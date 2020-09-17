@@ -47,8 +47,7 @@ func (b *Emqx) CreateClient() (*ClientInterface, error) {
 	//c := &client
 
 	// todo 여기선 어떻게 리턴해야하지..
-	//return client, nil
-	return nil, nil
+	return client, nil
 }
 
 func (b *Emqx) Pub(client *ClientInterface, topic string, message string) error {
