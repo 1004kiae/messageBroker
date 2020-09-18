@@ -16,3 +16,4 @@ github.com/go-redis/redis/internal/util
 golang.org/x/net/internal/socks
 golang.org/x/net/proxy
 golang.org/x/net/websocket
+# com2us.com/messageBroker => ./
